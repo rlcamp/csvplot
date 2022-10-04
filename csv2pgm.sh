@@ -7,7 +7,7 @@ set -euo pipefail
 # if stdout is a tty, and pstopdf is in the path (indicating likely Apple)...
 if [ -t 1 ] && command -v pstopdf 1>/dev/null; then
 # then redirect stdout to a temporary file and open in Preview
-    exec 1> >(cat > /tmp/out.pgm && open -a Preview /tmp/out.pgm);
+    exec > >(cat > /tmp/out.pgm && open -a Preview /tmp/out.pgm);
 fi
 
 tmpfile=$(mktemp)
@@ -20,6 +20,6 @@ printf "%s %s\n" $(head -n1 <$tmpfile | wc -w) $(wc -l <$tmpfile)
 printf "255\n"
 
 # pass through the entire input
-exec 0<$tmpfile
+exec <$tmpfile
 rm $tmpfile
 cat
