@@ -11,15 +11,23 @@ if [ -t 1 ] && command -v pstopdf 1>/dev/null; then
 fi
 
 tmpfile=$(mktemp)
+
+# make as many copies of the fd as we need once-through reads/writes, because each can't be rewound
+exec 3>$tmpfile
+exec 4<$tmpfile
+exec 5<$tmpfile
+exec 6<$tmpfile
+
+# and delete the file. if the script dies abnormally for any reason, we don't leave anything behind
+rm $tmpfile
+
 # remove commas and map 0-255 onto 255-0
-awk -F',' '{ for (i = 1; i < NF; i++) { printf (255 - $i)" " }; printf "\n" }' > $tmpfile
+awk -F',' '{ for (i = 1; i < NF; i++) { printf (255 - $i)" " }; printf "\n" }' >&3
 
 # write a pgm header that needs to know the number of rows and cols
 printf "P2\n"
-printf "%s %s\n" $(head -n1 <$tmpfile | wc -w) $(wc -l <$tmpfile)
+printf "%d %d\n" $(head -n1 <&4 | wc -w) $(wc -l <&5)
 printf "255\n"
 
 # pass through the entire input
-exec <$tmpfile
-rm $tmpfile
-cat
+cat <&6
