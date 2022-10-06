@@ -21,13 +21,13 @@ exec 6<$tmpfile
 # and delete the file. if the script dies abnormally for any reason, we don't leave anything behind
 rm $tmpfile
 
-# remove commas and map 0-255 onto 255-0
-awk -F',' '{ for (i = 1; i <= NF; i++) { printf (255 - $i)" " }; printf "\n" }' >&3
+# ingest input until eof
+cat >&3
 
 # write a pgm header that needs to know the number of rows and cols
-printf "P2\n"
-printf "%d %d\n" $(head -n1 <&4 | wc -w) $(wc -l <&5)
+printf "P5\n"
+printf "%d %d\n" $(head -n1 <&4 | awk -F',' '{print NF}') $(wc -l <&5)
 printf "255\n"
 
-# pass through the entire input
-cat <&6
+# pass through the entire input, removing commas and mapping 0-255 text vals onto 255-0 raw bytes
+awk -F',' '{ for (i = 1; i <= NF; i++) printf "%c", 255 - $i }' <&6
