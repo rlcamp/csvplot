@@ -16,7 +16,6 @@ XTICK=
 YTICK=
 SCATTER=0
 
-
 while (( "$#" )); do
   case "$1" in
     title) TITLE=$2; shift 2 ;;
