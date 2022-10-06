@@ -14,6 +14,8 @@ XLABEL='label your x axis'
 YLABEL='label your y axis'
 XTICK=
 YTICK=
+SCATTER=0
+
 
 while (( "$#" )); do
   case "$1" in
@@ -22,6 +24,7 @@ while (( "$#" )); do
     ylabel) YLABEL=$2; shift 2 ;;
     xtick) XTICK=$2; shift 2 ;;
     ytick) YTICK=$2; shift 2 ;;
+    scatter) SCATTER=$2; shift 2 ;;
     *) printf "warning: unrecognized argument %s\n" $1 >&2; shift ;;
   esac
 done
@@ -38,7 +41,13 @@ printf "set xtics %s\n" "${XTICK}"
 printf "set ytics %s\n" "${YTICK}"
 printf "set datafile separator ','\n"
 
-printf "plot '-' using 1:2 with lines ls 1 lw 3\n"
+printf "plot '-' using 1:2 "
+
+if [ $SCATTER -ne 0 ]; then
+    printf "pt 7 ps 0.7\n"
+else
+    printf "with lines ls 1 lw 3\n"
+fi
 
 # pass through the csv data
 cat -
