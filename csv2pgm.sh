@@ -22,7 +22,7 @@ exec 6<$tmpfile
 rm $tmpfile
 
 # remove commas and map 0-255 onto 255-0
-awk -F',' '{ for (i = 1; i < NF; i++) { printf (255 - $i)" " }; printf "\n" }' >&3
+awk -F',' '{ for (i = 1; i <= NF; i++) { printf (255 - $i)" " }; printf "\n" }' >&3
 
 # write a pgm header that needs to know the number of rows and cols
 printf "P2\n"
