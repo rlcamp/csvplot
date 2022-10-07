@@ -1,0 +1,22 @@
+#!/usr/bin/env awk -f
+
+# at program start, set separator to commas. TODO: doesn't ignore commas within double quotes
+BEGIN { FS = "," }
+
+# run this on every line (row) of input
+{
+    # loop over columns (fields), storing everything into an array that expands on demand
+    for (ic = 0; ic < NF; ic++)
+        a[NR - 1, ic] = $(ic + 1)
+}
+
+# after the first row, and if subsequent rows ever have more columns, set C to the number of columns
+NF > C { C = NF }
+
+# after ingesting all of the input...
+END {
+    # loop over stored values, printing each, with nested loop order reversed
+    for (ic = 0; ic < C; ic++)
+        for (ir = 0; ir < NR; ir++)
+            printf "%s%s", a[ir, ic], (ir + 1 < NR ? "," : "\n")
+}
