@@ -49,4 +49,4 @@ else
 fi
 
 # pass through the csv data
-cat -
+exec cat
