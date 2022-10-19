@@ -36,6 +36,8 @@ printf "set grid\n"
 printf "set title '%s'\n" "${TITLE}"
 printf "set xlabel '%s'\n" "${XLABEL}"
 printf "set ylabel '%s'\n" "${YLABEL}"
+if (( XTICK < 0 )); then printf 'set xrange reverse\n'; XTICK=-$XTICK; fi
+if (( YTICK < 0 )); then printf 'set yrange reverse\n'; YTICK=-$YTICK; fi
 printf "set xtics %s\n" "${XTICK}"
 printf "set ytics %s\n" "${YTICK}"
 printf "set datafile separator ','\n"
