@@ -25,9 +25,9 @@ rm $tmpfile
 cat >&3
 
 # write a pgm header that needs to know the number of rows and cols
-printf "P5\n"
-printf "%d %d\n" $(head -n1 <&4 | awk -F',' '{print NF}') $(wc -l <&5)
-printf "255\n"
+printf 'P5\n'
+printf '%d %d\n' $(head -n1 <&4 | awk -F',' '{print NF}') $(wc -l <&5)
+printf '255\n'
 
 # pass through the entire input, removing commas and mapping 0-255 text vals onto 255-0 raw bytes
 exec awk -F',' '{ for (i = 1; i <= NF; i++) printf "%c", 255 - $i }' <&6
